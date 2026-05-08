@@ -6,7 +6,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const YTDLP = 'C:\\Users\\mayur\\yt-dlp.exe';
+const YTDLP = process.env.YTDLP_PATH || 'yt-dlp';
 const FFMPEG_DIR = 'C:\\Users\\mayur\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1.1-full_build\\bin';
 
 app.use(cors());
