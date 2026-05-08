@@ -131,3 +131,125 @@ document.getElementById('videoUrl').addEventListener('paste', () => {
     if (val.startsWith('http')) fetchVideoInfo();
   }, 100);
 });
+
+// Add download icon to format buttons
+function makeFormatBtnWithIcon(res, ext, size, type, url, formatId) {
+  const btn = makeFormatBtn(res, ext, size, type, url, formatId);
+  btn.insertAdjacentHTML('beforeend', '<span class="dl-icon">⬇</span>');
+  return btn;
+}
+
+// ── PARTICLE SYSTEM ───────────────────────────────────────────────
+(function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, stars = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', () => { resize(); buildStars(); });
+
+  function buildStars() {
+    const count = Math.floor((W * H) / 9000);
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      o: Math.random() * 0.55 + 0.1,
+      sp: Math.random() * 0.015 + 0.003,
+      dir: Math.random() > .5 ? 1 : -1,
+      vy: (Math.random() - 0.5) * 0.08,
+      vx: (Math.random() - 0.5) * 0.05,
+    }));
+  }
+  buildStars();
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    stars.forEach(s => {
+      s.o += s.sp * s.dir;
+      if (s.o > 0.65 || s.o < 0.05) s.dir *= -1;
+      s.x = (s.x + s.vx + W) % W;
+      s.y = (s.y + s.vy + H) % H;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(167,139,250,${s.o.toFixed(2)})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  // Subtle mouse parallax
+  window.addEventListener('mousemove', e => {
+    const mx = (e.clientX / W - .5) * 0.4;
+    const my = (e.clientY / H - .5) * 0.4;
+    stars.forEach(s => {
+      s.x += mx * s.r;
+      s.y += my * s.r;
+    });
+  }, { passive: true });
+})();
+
+// ── 3D TILT on cards ─────────────────────────────────────────────
+function enableTilt(el) {
+  if (!el) return;
+  const strength = 10;
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width  - .5) * 2;
+    const y = ((e.clientY - r.top)  / r.height - .5) * 2;
+    el.style.transform = `perspective(800px) rotateX(${-y * strength}deg) rotateY(${x * strength}deg) translateZ(8px)`;
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
+    el.style.transition = 'transform .5s cubic-bezier(.23,1,.32,1)';
+    setTimeout(() => { el.style.transition = ''; }, 500);
+  });
+}
+
+// Attach tilt to video card whenever result is shown
+const _origDisplay = displayResult;
+displayResult = function(data, url) {
+  _origDisplay(data, url);
+  setTimeout(() => {
+    const card = document.querySelector('.video-card');
+    if (card) enableTilt(card);
+    document.querySelectorAll('.format-btn').forEach(b => {
+      b.insertAdjacentHTML('beforeend', '<span class="dl-icon">⬇</span>');
+    });
+  }, 100);
+};
+
+// ── SCROLL REVEAL ─────────────────────────────────────────────────
+function initScrollReveal() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => obs.observe(el));
+}
+initScrollReveal();
+
+// ── COUNTER ANIMATION ─────────────────────────────────────────────
+function animateCounters() {
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+    const target = +el.dataset.target;
+    let cur = 0;
+    const step = target / 60;
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, target);
+      el.textContent = Math.floor(cur).toLocaleString() + (el.dataset.suffix || '');
+      if (cur >= target) clearInterval(t);
+    }, 18);
+  });
+}
+animateCounters();

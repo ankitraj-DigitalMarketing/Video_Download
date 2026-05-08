@@ -15,6 +15,12 @@
 </head>
 <body>
 
+  <!-- Particle canvas & ambient orbs -->
+  <canvas id="particles-canvas"></canvas>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
   <!-- ── HEADER ───────────────────────────────────────────────── -->
   <header>
     <div class="logo">
@@ -164,10 +170,15 @@
 
   <!-- ── LOADING ────────────────────────────────────────────────── -->
   <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="spinner-wrap">
-      <div class="spinner-ring"></div>
-      <div class="spinner-ring"></div>
-      <div class="spinner-ring"></div>
+    <div class="cube-scene">
+      <div class="cube">
+        <div class="cube-face front"></div>
+        <div class="cube-face back"></div>
+        <div class="cube-face right"></div>
+        <div class="cube-face left"></div>
+        <div class="cube-face top"></div>
+        <div class="cube-face bottom"></div>
+      </div>
     </div>
     <p id="loadingText">Video info fetch ho rahi hai...</p>
     <p class="loading-sub">Thoda wait karein...</p>
@@ -181,7 +192,7 @@
   </div>
 
   <!-- ── HOW TO USE ──────────────────────────────────────────────── -->
-  <section id="how" class="how-section">
+  <section id="how" class="how-section reveal">
     <span class="section-tag">Guide</span>
     <h2 class="section-title">Sirf 4 Steps Mein Download Karein</h2>
     <p class="section-sub">Koi software install karne ki zaroorat nahi — seedha browser mein kaam karta hai</p>
@@ -211,7 +222,7 @@
   </section>
 
   <!-- ── PLATFORMS ──────────────────────────────────────────────── -->
-  <section id="platforms" class="platforms-section">
+  <section id="platforms" class="platforms-section reveal">
     <span class="section-tag">Platforms</span>
     <h2 class="section-title">1000+ Websites Supported</h2>
     <p class="section-sub">Duniya ki sabse popular video platforms se download karein</p>
