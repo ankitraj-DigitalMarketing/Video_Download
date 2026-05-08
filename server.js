@@ -1,13 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const { spawn } = require('child_process');
-const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const YTDLP = process.env.YTDLP_PATH || 'yt-dlp';
-const FFMPEG_DIR = 'C:\\Users\\mayur\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-8.1.1-full_build\\bin';
+const FFMPEG = process.env.FFMPEG_PATH || 'ffmpeg';
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +16,7 @@ const BASE_ARGS = [
   '--no-check-certificates',
   '--no-warnings',
   '--no-playlist',
-  '--ffmpeg-location', FFMPEG_DIR,
+  '--ffmpeg-location', FFMPEG,
 ];
 
 function isValidUrl(str) {
@@ -41,7 +40,7 @@ function runYtDlp(args, timeoutMs = 30000) {
   });
 }
 
-// ─── INFO ────────────────────────────────────────────────────────────────────
+// INFO
 app.post('/api/info', async (req, res) => {
   const { url } = req.body;
   if (!url || !isValidUrl(url)) return res.status(400).json({ error: 'Sahi URL daalen' });
@@ -88,7 +87,7 @@ app.post('/api/info', async (req, res) => {
   }
 });
 
-// ─── DOWNLOAD (direct pipe — no temp file, fast) ──────────────────────────────
+// DOWNLOAD
 app.get('/api/download', async (req, res) => {
   const { url, format_id } = req.query;
   if (!url || !isValidUrl(url)) return res.status(400).send('Invalid URL');
@@ -97,7 +96,6 @@ app.get('/api/download', async (req, res) => {
   const needsMerge = fmt.includes('+');
   const outExt = needsMerge ? 'mkv' : '%(ext)s';
 
-  // Get filename first (quick)
   let filename = 'video.mp4';
   try {
     const fn = await runYtDlp([
@@ -130,7 +128,9 @@ app.get('/api/download', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\nServer: http://localhost:${PORT}`);
-  runYtDlp(['--version']).then(v => console.log(`yt-dlp ${v.trim()} ready`)).catch(() => console.error('yt-dlp not found'));
-  const ff = spawn(path.join(FFMPEG_DIR, 'ffmpeg.exe'), ['-version'], { windowsHide: true });
-  ff.stdout.once('data', d => console.log('ffmpeg ready:', d.toString().split('\n')[0]));
+  runYtDlp(['--version'])
+    .then(v => console.log(`yt-dlp ${v.trim()} ready`))
+    .catch(() => console.error('yt-dlp not found'));
+  spawn(FFMPEG, ['-version'])
+    .stdout.once('data', d => console.log('ffmpeg ready:', d.toString().split('\n')[0]));
 });
