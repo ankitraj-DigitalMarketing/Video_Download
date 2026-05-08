@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(yt-dlp --version)",
+      "PowerShell(cd \"c:\\\\Users\\\\mayur\\\\Converter Website\"; npm install --strict-ssl false 2>&1; Write-Host \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(winget install yt-dlp.yt-dlp 2>&1; Write-Host \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(Invoke-WebRequest -Uri \"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe\" -OutFile \"C:\\\\Windows\\\\System32\\\\yt-dlp.exe\" 2>&1; Write-Host \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(Invoke-WebRequest -Uri \"https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe\" -OutFile \"C:\\\\Users\\\\mayur\\\\yt-dlp.exe\" 2>&1; Write-Host \"EXIT:$LASTEXITCODE\")",
+      "PowerShell(C:\\\\Users\\\\mayur\\\\yt-dlp.exe --version 2>&1)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:3000\" -Method GET 2>&1)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force)",
+      "PowerShell(C:\\\\Users\\\\mayur\\\\yt-dlp.exe --dump-json --no-playlist \"https://www.youtube.com/watch?v=GVRaarcnswo\" 2>&1)",
+      "PowerShell($body = '{\"url\":\"https://www.youtube.com/watch?v=GVRaarcnswo\"}'; $result = Invoke-RestMethod -Uri \"http://localhost:3000/api/info\" -Method POST -Body $body -ContentType \"application/json\"; Write-Host \"Title: $\\($result.title\\)\"; Write-Host \"Platform: $\\($result.platform\\)\"; Write-Host \"Formats: $\\($result.formats.Count\\)\")",
+      "PowerShell($body = '{\"url\":\"https://www.youtube.com/watch?v=GVRaarcnswo\"}'; $r = Invoke-RestMethod -Uri \"http://localhost:3000/api/info\" -Method POST -Body $body -ContentType \"application/json\" -TimeoutSec 40; Write-Host \"Title:   \" $r.title; Write-Host \"Platform:\" $r.platform; Write-Host \"Presets: \" $r.presets.Count; Write-Host \"Formats: \" $r.formats.Count)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue | Stop-Process -Force; Start-Sleep -Seconds 1; cd \"c:\\\\Users\\\\mayur\\\\Converter Website\"; Start-Process -NoNewWindow -FilePath \"node\" -ArgumentList \"server.js\"; Start-Sleep -Seconds 3; $body = '{\"url\":\"https://www.youtube.com/watch?v=GVRaarcnswo\"}'; $r = Invoke-RestMethod -Uri \"http://localhost:3000/api/info\" -Method POST -Body $body -ContentType \"application/json\" -TimeoutSec 40; Write-Host \"YouTube OK - Title:\" $r.title.Substring\\(0,[Math]::Min\\(50,$r.title.Length\\)\\); Write-Host \"Presets:\" $r.presets.Count \"| Formats:\" $r.formats.Count)",
+      "PowerShell($env:PATH -split \";\" | Where-Object { $_ -match \"ffmpeg|gyan\" })",
+      "PowerShell([System.Environment]::GetEnvironmentVariable\\(\"PATH\", \"User\"\\) -split \";\" | Where-Object { $_ -match \"ffmpeg|gyan|yt-dlp|media\" })",
+      "PowerShell($url = \"http://localhost:3000/api/download?url=\" + [uri]::EscapeDataString\\(\"https://www.youtube.com/watch?v=GVRaarcnswo\"\\) + \"&format_id=best\"; $wc = New-Object System.Net.WebClient; $wc.DownloadFile\\($url, \"C:\\\\Users\\\\mayur\\\\test_video.mp4\"\\); $size = \\(Get-Item \"C:\\\\Users\\\\mayur\\\\test_video.mp4\"\\).Length; Write-Host \"Downloaded: $\\([math]::Round\\($size/1MB, 1\\)\\) MB\"; Remove-Item \"C:\\\\Users\\\\mayur\\\\test_video.mp4\" -Force)",
+      "PowerShell(cd \"c:\\\\Users\\\\mayur\\\\Converter Website\"; Start-Process -NoNewWindow -FilePath \"node\" -ArgumentList \"server.js\"; Start-Sleep -Seconds 4; $r = Invoke-RestMethod -Uri \"http://localhost:3000/api/info\" -Method POST -Body '{\"url\":\"https://www.youtube.com/watch?v=GVRaarcnswo\"}' -ContentType \"application/json\"; Write-Host \"API OK: $\\($r.title\\)\")"
+    ]
+  }
+}
